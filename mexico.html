@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raphael Barone — Automatización IA para tu Hostel</title>
+<style>
+:root {
+  --black: #0a0a0a;
+  --dark: #111111;
+  --card: #161616;
+  --border: #222222;
+  --gold: #d4a843;
+  --gold2: #f0c060;
+  --green: #22c55e;
+  --red: #ef4444;
+  --muted: #666;
+  --text: #e8e8e8;
+  --sub: #999;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:60px 24px 40px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212,168,67,.15) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 80% 80%, rgba(212,168,67,.05) 0%, transparent 60%);
+  pointer-events:none;
+}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(212,168,67,.1);
+  border:1px solid rgba(212,168,67,.3);
+  color:var(--gold);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:6px 16px;
+  border-radius:100px;
+  margin-bottom:32px;
+}
+.tag .dot{
+  width:6px;height:6px;
+  background:var(--gold);
+  border-radius:50%;
+  animation:pulse 1.5s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+.hero h1{
+  font-size:clamp(2.4rem, 7vw, 5.5rem);
+  font-weight:900;
+  line-height:1.05;
+  letter-spacing:-2px;
+  margin-bottom:8px;
+}
+.hero h1 span{color:var(--gold)}
+.hero .sub{
+  font-size:clamp(1.1rem, 2.5vw, 1.5rem);
+  color:var(--sub);
+  max-width:640px;
+  margin:16px auto 40px;
+  line-height:1.5;
+}
+.hero .sub strong{color:var(--text)}
+
+.cta-group{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:64px}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--gold);
+  color:#000;
+  font-weight:800;font-size:1rem;
+  padding:16px 32px;
+  border-radius:12px;
+  text-decoration:none;
+  transition:all .2s;
+  box-shadow:0 8px 32px rgba(212,168,67,.3);
+}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(212,168,67,.4)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--border);
+  color:var(--sub);
+  font-size:.95rem;
+  padding:16px 28px;
+  border-radius:12px;
+  text-decoration:none;
+  transition:all .2s;
+}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+
+/* stats row */
+.stats{
+  display:flex;gap:32px;flex-wrap:wrap;justify-content:center;
+  border-top:1px solid var(--border);
+  padding-top:40px;
+  width:100%;max-width:700px;
+}
+.stat{text-align:center}
+.stat .num{font-size:2rem;font-weight:900;color:var(--gold);line-height:1}
+.stat .lbl{font-size:.75rem;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+/* ── SECTION WRAPPER ── */
+section{padding:80px 24px;max-width:1000px;margin:0 auto}
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:16px;display:block;
+}
+h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;letter-spacing:-1px;line-height:1.1;margin-bottom:20px}
+h2 em{color:var(--gold);font-style:normal}
+.section-sub{color:var(--sub);font-size:1.05rem;max-width:600px;line-height:1.7;margin-bottom:48px}
+
+/* ── PROBLEM SECTION ── */
+.pain-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px;
+  margin-bottom:48px;
+}
+.pain-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+  position:relative;
+  overflow:hidden;
+}
+.pain-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--red),transparent);
+}
+.pain-icon{font-size:1.8rem;margin-bottom:12px}
+.pain-card h3{font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--text)}
+.pain-card p{font-size:.875rem;color:var(--muted);line-height:1.6}
+.pain-cost{
+  display:inline-block;
+  background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.3);
+  color:#f87171;
+  font-size:.75rem;font-weight:700;
+  padding:3px 10px;border-radius:100px;
+  margin-top:12px;
+}
+
+/* ── SERVICES ── */
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:20px;
+}
+.service-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:28px;
+  position:relative;
+  overflow:hidden;
+  transition:border-color .2s, transform .2s;
+}
+.service-card:hover{border-color:rgba(212,168,67,.4);transform:translateY(-4px)}
+.service-card.featured{
+  border-color:rgba(212,168,67,.4);
+  background:linear-gradient(135deg, #161616 0%, #1a1508 100%);
+}
+.service-card.featured::before{
+  content:'⭐ MÁS POPULAR';
+  position:absolute;top:16px;right:16px;
+  font-size:.65rem;font-weight:800;letter-spacing:1.5px;
+  background:var(--gold);color:#000;
+  padding:3px 10px;border-radius:100px;
+}
+.service-icon{
+  width:48px;height:48px;
+  background:rgba(212,168,67,.1);
+  border:1px solid rgba(212,168,67,.2);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;
+  margin-bottom:20px;
+}
+.service-card h3{font-size:1.1rem;font-weight:800;margin-bottom:10px}
+.service-card p{font-size:.875rem;color:var(--muted);line-height:1.65;margin-bottom:20px}
+.features{list-style:none;display:flex;flex-direction:column;gap:8px}
+.features li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:.82rem;color:var(--sub);
+}
+.features li::before{content:'✓';color:var(--green);font-weight:900;flex-shrink:0;margin-top:1px}
+.service-value{
+  margin-top:20px;
+  padding-top:20px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.market-price{color:var(--muted);font-size:.8rem}
+.market-price s{color:var(--red);font-size:1rem;font-weight:700}
+.my-price{color:var(--gold);font-weight:800;font-size:.9rem}
+
+/* ── PROOF / DEMO ── */
+.demo-block{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:32px;
+  margin-bottom:20px;
+}
+.demo-label{font-size:.75rem;color:var(--sub);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.chat-bubble{
+  background:#1a1a1a;
+  border:1px solid #2a2a2a;
+  border-radius:12px;
+  padding:14px 18px;
+  font-size:.875rem;
+  line-height:1.6;
+  margin-bottom:10px;
+  position:relative;
+}
+.chat-bubble.user{
+  background:rgba(212,168,67,.08);
+  border-color:rgba(212,168,67,.2);
+  margin-left:40px;
+}
+.chat-bubble .who{
+  font-size:.7rem;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:6px;
+  color:var(--sub);
+}
+.chat-bubble.bot .who{color:var(--green)}
+.chat-bubble.user .who{color:var(--gold)}
+.typing{display:inline-flex;gap:4px;padding:4px 0}
+.typing span{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:typing .9s infinite}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* ── ABOUT ── */
+.about-grid{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:48px;
+  align-items:start;
+}
+@media(max-width:600px){.about-grid{grid-template-columns:1fr;text-align:center}}
+.about-photo{
+  width:160px;height:160px;
+  border-radius:50%;
+  object-fit:cover;
+  object-position:center 10%;
+  border:3px solid var(--gold);
+  box-shadow:0 0 40px rgba(212,168,67,.2);
+}
+@media(max-width:600px){.about-photo{margin:0 auto}}
+.about-name{font-size:1.5rem;font-weight:900;margin-bottom:4px}
+.about-role{color:var(--gold);font-size:.875rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.about-text{color:var(--muted);font-size:.95rem;line-height:1.8;margin-bottom:24px}
+.skills-row{display:flex;flex-wrap:wrap;gap:8px}
+.skill-chip{
+  background:rgba(212,168,67,.08);
+  border:1px solid rgba(212,168,67,.2);
+  color:var(--gold);
+  font-size:.75rem;font-weight:600;
+  padding:5px 12px;border-radius:100px;
+}
+
+/* ── THE DEAL ── */
+.deal-box{
+  background:linear-gradient(135deg, #1a1408 0%, #161610 100%);
+  border:1px solid rgba(212,168,67,.4);
+  border-radius:24px;
+  padding:48px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.deal-box::before{
+  content:'';
+  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(212,168,67,.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.deal-badge{
+  display:inline-block;
+  background:var(--gold);
+  color:#000;
+  font-size:.75rem;font-weight:900;letter-spacing:2px;
+  text-transform:uppercase;
+  padding:6px 20px;border-radius:100px;
+  margin-bottom:24px;
+}
+.deal-box h2{font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:16px}
+.deal-box p{color:var(--sub);max-width:560px;margin:0 auto 32px;font-size:1rem;line-height:1.7}
+.deal-price{
+  display:flex;align-items:center;justify-content:center;gap:24px;
+  flex-wrap:wrap;
+  margin-bottom:40px;
+}
+.price-block{text-align:center}
+.price-block .label{font-size:.75rem;color:var(--sub);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.price-block .amount{font-size:2.5rem;font-weight:900;line-height:1}
+.price-block .amount.strike{color:var(--red);text-decoration:line-through;font-size:1.8rem}
+.price-block .amount.deal{color:var(--gold)}
+.price-divider{font-size:1.5rem;color:var(--muted);margin-top:16px}
+.fine-print{font-size:.8rem;color:var(--muted);margin-top:16px;line-height:1.6}
+
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:2px}
+.faq-item{
+  border-bottom:1px solid var(--border);
+  padding:20px 0;
+}
+.faq-q{font-size:1rem;font-weight:700;margin-bottom:10px;display:flex;gap:12px}
+.faq-q span{color:var(--gold)}
+.faq-a{color:var(--muted);font-size:.9rem;line-height:1.7;padding-left:28px}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:32px 24px;
+  text-align:center;
+  color:var(--muted);
+  font-size:.85rem;
+}
+footer a{color:var(--gold);text-decoration:none}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════ HERO -->
+<div class="hero">
+  <div class="tag"><span class="dot"></span>Oferta exclusiva · Tiempo limitado</div>
+
+  <h1>Tu hostel en<br>piloto <span>automático.</span></h1>
+
+  <p class="sub">
+    Implemento <strong>sistemas de inteligencia artificial</strong> que trabajan 24/7 respondiendo huéspedes, gestionando reseñas y llenando camas —<strong> sin que tú hagas nada.</strong>
+  </p>
+
+  <div class="cta-group">
+    <a href="https://wa.me/5541992054895?text=Hola%20Raphael%2C%20quiero%20saber%20m%C3%A1s%20sobre%20la%20automatizaci%C3%B3n%20de%20IA%20para%20mi%20hostel" class="btn-primary">
+      💬 Hablar ahora por WhatsApp
+    </a>
+    <a href="#servicios" class="btn-secondary">
+      Ver qué incluye ↓
+    </a>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="num">+340%</div>
+      <div class="lbl">más respuestas<br>a tiempo</div>
+    </div>
+    <div class="stat">
+      <div class="num">24 h</div>
+      <div class="lbl">atención<br>sin parar</div>
+    </div>
+    <div class="stat">
+      <div class="num">$0</div>
+      <div class="lbl">costo en<br>personal extra</div>
+    </div>
+    <div class="stat">
+      <div class="num">4 sem.</div>
+      <div class="lbl">es todo lo que<br>pido a cambio</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ PROBLEMA -->
+<section>
+  <span class="section-label">El problema</span>
+  <h2>Lo que le cuesta dinero<br>a tu hostel <em>hoy mismo</em></h2>
+  <p class="section-sub">Cada mensaje sin responder, cada reseña ignorada y cada noche vacía es dinero que se va. La IA lo resuelve — pero contratar a alguien que lo sepa hacer es carísimo.</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">😩</div>
+      <h3>Mensajes a las 3am que nadie ve</h3>
+      <p>Un viajero pregunta si hay cama disponible para mañana. Nadie responde. Se va a otro hostel. Así, 3–5 veces por semana.</p>
+      <span class="pain-cost">~$800 USD/mes perdidos</span>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">⭐</div>
+      <h3>Reseñas sin respuesta</h3>
+      <p>Google y TripAdvisor premian a los negocios que responden reseñas. Los que no lo hacen caen en el ranking y reciben menos reservas orgánicas.</p>
+      <span class="pain-cost">-30% visibilidad en buscadores</span>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📲</div>
+      <h3>Redes sociales abandonadas</h3>
+      <p>Un perfil de Instagram sin actividad parece un hostel cerrado. Los viajeros jóvenes deciden dónde quedarse basándose en Instagram antes de buscar en Booking.</p>
+      <span class="pain-cost">Tasa de conversión -40%</span>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🔄</div>
+      <h3>Los mismos huéspedes una sola vez</h3>
+      <p>¿Cuántos viajeros que se quedaron contigo volvieron o te recomendaron? Sin seguimiento automatizado, el 95% desaparece para siempre.</p>
+      <span class="pain-cost">Costo de adquisición x5</span>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🌐</div>
+      <h3>Barreras de idioma</h3>
+      <p>Un viajero alemán, uno japonés, uno brasileño. Tu equipo habla español e inglés. La IA responde en 30+ idiomas, sin perder el tono de tu hostel.</p>
+      <span class="pain-cost">30% de clientes potenciales ignorados</span>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💸</div>
+      <h3>Contratar un experto en IA cuesta una fortuna</h3>
+      <p>Un consultor de automatización en México cobra entre $3,000 y $8,000 USD por implementar los sistemas que yo voy a instalar en tu hostel.</p>
+      <span class="pain-cost">$3,000–8,000 USD en el mercado</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ SERVICIOS -->
+<section id="servicios" style="padding-top:0">
+  <span class="section-label">La solución</span>
+  <h2>Todo lo que voy a implementar<br>en tu <em>hostel</em></h2>
+  <p class="section-sub">No es teoría. Son sistemas reales que quedan funcionando después de que me vaya.</p>
+
+  <div class="services-grid">
+
+    <div class="service-card featured">
+      <div class="service-icon">🤖</div>
+      <h3>Chatbot IA para WhatsApp</h3>
+      <p>Un asistente 24/7 que responde preguntas de reservas, precios, check-in y recomendaciones locales — en el idioma del viajero, con la personalidad de tu hostel.</p>
+      <ul class="features">
+        <li>Responde en español, inglés, portugués, alemán y más</li>
+        <li>Integrado con tu sistema de reservas actual</li>
+        <li>Escala a humano cuando es necesario</li>
+        <li>Aprende con el tiempo de las preguntas frecuentes</li>
+        <li>Disponible las 24 horas, 7 días a la semana</li>
+      </ul>
+      <div class="service-value">
+        <span class="market-price">Precio de mercado: <s>$2,500 USD</s></span>
+        <span class="my-price">Incluido ✓</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">⭐</div>
+      <h3>Gestión automática de reseñas</h3>
+      <p>La IA responde cada reseña en Google, TripAdvisor y Booking con mensajes personalizados —sin que tú tengas que abrir una sola app.</p>
+      <ul class="features">
+        <li>Respuestas personalizadas (no plantillas genéricas)</li>
+        <li>Mejora tu ranking en buscadores automáticamente</li>
+        <li>Alerta si llega una reseña negativa urgente</li>
+        <li>Solicitud automática de reseñas post check-out</li>
+      </ul>
+      <div class="service-value">
+        <span class="market-price">Precio de mercado: <s>$800 USD</s></span>
+        <span class="my-price">Incluido ✓</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">📸</div>
+      <h3>Contenido para redes sociales</h3>
+      <p>Captions, historias y posts generados por IA basados en las fotos y vibe de tu hostel. Tú solo subes las fotos — el texto y las estrategias las hace la IA.</p>
+      <ul class="features">
+        <li>Captions en español e inglés optimizados para alcance</li>
+        <li>Calendario editorial mensual automatizado</li>
+        <li>Hashtag research y optimización continua</li>
+        <li>Respuesta automática a DMs de Instagram</li>
+      </ul>
+      <div class="service-value">
+        <span class="market-price">Precio de mercado: <s>$1,200 USD/mes</s></span>
+        <span class="my-price">Incluido ✓</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">📧</div>
+      <h3>Automatización de comunicación</h3>
+      <p>Secuencias de correos y mensajes automáticos: confirmación, instrucciones de llegada, guía local personalizada y seguimiento post-estancia.</p>
+      <ul class="features">
+        <li>Bienvenida personalizada antes del check-in</li>
+        <li>Guía local con recomendaciones según intereses</li>
+        <li>Mensaje de seguimiento para fidelizar</li>
+        <li>Código de descuento automático para regreso</li>
+      </ul>
+      <div class="service-value">
+        <span class="market-price">Precio de mercado: <s>$600 USD</s></span>
+        <span class="my-price">Incluido ✓</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">📊</div>
+      <h3>Dashboard de métricas clave</h3>
+      <p>Un panel simple donde ves en tiempo real: ocupación, reseñas, mensajes atendidos y cuánto dinero te ahorró la automatización.</p>
+      <ul class="features">
+        <li>Visualización de ocupación vs. competencia</li>
+        <li>Reporte semanal automático por WhatsApp</li>
+        <li>Alertas de oportunidades (puentes, eventos locales)</li>
+        <li>Sin necesidad de conocimientos técnicos</li>
+      </ul>
+      <div class="service-value">
+        <span class="market-price">Precio de mercado: <s>$1,500 USD</s></span>
+        <span class="my-price">Incluido ✓</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">🎓</div>
+      <h3>Capacitación de tu equipo</h3>
+      <p>Al final de las 4 semanas, tu equipo sabe cómo usar y mantener todo. No dependes de nadie — la tecnología se queda contigo para siempre.</p>
+      <ul class="features">
+        <li>Sesiones de capacitación incluidas</li>
+        <li>Manual de uso en español</li>
+        <li>Soporte por WhatsApp 30 días después</li>
+        <li>Las herramientas son tuyas, sin costo mensual</li>
+      </ul>
+      <div class="service-value">
+        <span class="market-price">Precio de mercado: <s>$500 USD</s></span>
+        <span class="my-price">Incluido ✓</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ DEMO CHAT -->
+<section style="padding-top:0">
+  <span class="section-label">Demo en vivo</span>
+  <h2>Así responde tu hostel<br>con <em>IA activa</em></h2>
+  <p class="section-sub">Esto es lo que ve un viajero cuando escribe a las 3am. En vez de silencio, obtiene una respuesta perfecta.</p>
+
+  <div class="demo-block">
+    <div class="demo-label">💬 WhatsApp · Hostel Ejemplo · 3:14 AM</div>
+
+    <div class="chat-bubble user">
+      <div class="who">Viajero (Alemania)</div>
+      Hi! Do you have a mixed dorm available for tomorrow night? How much is it? Also, is there parking nearby?
+    </div>
+
+    <div class="chat-bubble bot">
+      <div class="who">🤖 Asistente del Hostel (Respuesta instantánea)</div>
+      Hey! Great news — we do have beds available in our mixed dorm for tomorrow 🎉<br><br>
+      <strong>Mixed Dorm:</strong> $280 MXN per night (breakfast included!)<br>
+      <strong>Parking:</strong> There's a secure lot 80m away at Calle Juárez 14, about $80 MXN/day.<br><br>
+      Want me to hold a spot for you? Just tell me your name and I'll send you the booking link right now 🙌
+    </div>
+
+    <div class="chat-bubble user">
+      <div class="who">Viajero (Alemania)</div>
+      Yes please! My name is Lars. Can I also get a late check-in? Arriving around 11pm.
+    </div>
+
+    <div class="chat-bubble bot">
+      <div class="who">🤖 Asistente del Hostel (Respuesta instantánea)</div>
+      Perfect, Lars! Late check-in is totally fine — just let us know your approximate arrival time closer to the date and we'll leave your key in the lockbox 🔑<br><br>
+      Here's your booking link: <u>[booking.hostel.com/lars-dorm]</u><br><br>
+      Can't wait to have you with us! 🌮✨
+    </div>
+  </div>
+
+  <div style="text-align:center;color:var(--muted);font-size:.875rem;margin-top:-4px">
+    ⚡ Tiempo de respuesta: <strong style="color:var(--green)">2 segundos</strong> · Lars reservó. Sin intervención humana.
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ SOBRE MÍ -->
+<section id="sobre-mi">
+  <span class="section-label">Quién soy</span>
+  <h2>El especialista que<br>viene a tu <em>hostel</em></h2>
+
+  <div class="about-grid">
+    <div>
+      <img class="about-photo" src="data:image/jpeg;base64,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" alt="Raphael Barone">
+    </div>
+    <div>
+      <div class="about-name">Raphael Barone</div>
+      <div class="about-role">AI Implementation Specialist</div>
+      <p class="about-text">
+        Soy brasileño, llevo años trabajando con inteligencia artificial aplicada a negocios reales. No soy un teórico — implemento sistemas que funcionan y que cualquier persona puede operar sin conocimientos técnicos.<br><br>
+        Viajo a través de México buscando hostels con potencial para colaborar: yo aporto semanas de trabajo en automatización IA, y el hostel me ofrece alojamiento. Es un trato justo, concreto y con resultados medibles.
+      </p>
+      <div class="skills-row">
+        <span class="skill-chip">ChatGPT / Claude</span>
+        <span class="skill-chip">WhatsApp API</span>
+        <span class="skill-chip">Automatización N8N</span>
+        <span class="skill-chip">Make / Zapier</span>
+        <span class="skill-chip">Instagram API</span>
+        <span class="skill-chip">Google Business</span>
+        <span class="skill-chip">Análisis de datos</span>
+        <span class="skill-chip">Español · Inglés · Portugués</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ EL TRATO -->
+<section id="trato" style="padding-bottom:40px">
+  <div class="deal-box">
+    <div class="deal-badge">🤝 La propuesta</div>
+    <h2>Todo esto, a cambio de<br><em>4 semanas de hospedaje</em></h2>
+    <p>
+      Implemento cada uno de estos sistemas en tu hostel. Son tuyas para siempre. Sin costos mensuales, sin letra chica, sin que tengas que saber nada de tecnología.
+    </p>
+
+    <div class="deal-price">
+      <div class="price-block">
+        <div class="label">Valor de mercado</div>
+        <div class="amount strike">$6,600 USD</div>
+      </div>
+      <div class="price-divider">→</div>
+      <div class="price-block">
+        <div class="label">Lo que pido</div>
+        <div class="amount deal">4 semanas<br><span style="font-size:1rem">de cama</span></div>
+      </div>
+    </div>
+
+    <a href="https://wa.me/5541992054895?text=Hola%20Raphael%2C%20me%20interesa%20la%20propuesta%20de%20IA%20para%20mi%20hostel" class="btn-primary" style="font-size:1.1rem;padding:18px 40px">
+      💬 Quiero saber más — WhatsApp
+    </a>
+
+    <p class="fine-print">
+      Solo trabajo con <strong style="color:var(--text)">un hostel a la vez</strong>. Si estás leyendo esto, el cupo podría estar disponible.<br>
+      La conversación es gratuita y sin compromiso.
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ FAQ -->
+<section>
+  <span class="section-label">Preguntas frecuentes</span>
+  <h2>Lo que todos<br>me <em>preguntan</em></h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q"><span>01</span> ¿Qué pasa cuando te vas? ¿Deja de funcionar todo?</div>
+      <div class="faq-a">No. Todo lo que instalo queda operando de forma independiente. Te capacito a ti y a tu equipo para que puedan manejarlo. Además, te dejo 30 días de soporte por WhatsApp después de irme.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>02</span> ¿Necesito saber de tecnología o programación?</div>
+      <div class="faq-a">Para nada. Todo lo configuro para que funcione con apps que ya conoces: WhatsApp, Google, Instagram. Si sabes usar tu celular, sabes usar lo que voy a instalar.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>03</span> ¿Hay costos adicionales después?</div>
+      <div class="faq-a">Los costos de las plataformas (como WhatsApp Business API o ChatGPT) son mínimos — entre $20 y $80 USD al mes dependiendo del volumen. Yo te explico qué conviene y cómo reducirlos al mínimo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>04</span> ¿Por qué haces esto en vez de cobrar?</div>
+      <div class="faq-a">Soy un viajero. Prefiero vivir la experiencia de los lugares donde trabajo en vez de estar en un hotel genérico. Para mí es una forma de viajar con propósito. Para ti, es conseguir un servicio de $6,600 USD por el costo de una cama.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>05</span> ¿Cuánto espacio necesito darte?</div>
+      <div class="faq-a">Una cama en dorm es suficiente. No necesito nada especial. Solo WiFi estable para trabajar.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span>06</span> ¿Puedo ver resultados reales antes de decidir?</div>
+      <div class="faq-a">Sí. En la primera conversación por WhatsApp puedo mostrarte demos en vivo de cada sistema. No tienes que comprometerte a nada para ver cómo funciona.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ CTA FINAL -->
+<section style="text-align:center;padding-bottom:80px">
+  <span class="section-label" style="display:block;margin-bottom:16px">¿Listo para automatizar?</span>
+  <h2 style="margin-bottom:16px">La próxima temporada alta<br>puede ser <em>diferente</em></h2>
+  <p style="color:var(--muted);max-width:480px;margin:0 auto 40px;font-size:1rem;line-height:1.7">
+    Imagina que cada mensaje se responde solo, cada reseña queda contestada, tu Instagram se actualiza y tú solo te preocupas de dar una gran experiencia.
+  </p>
+  <a href="https://wa.me/5541992054895?text=Hola%20Raphael%2C%20me%20interesa%20la%20propuesta%20de%20IA%20para%20mi%20hostel" class="btn-primary" style="font-size:1.1rem;padding:18px 40px">
+    💬 Escribir a Raphael en WhatsApp
+  </a>
+</section>
+
+<!-- ════════════════════════════════════════ FOOTER -->
+<footer>
+  <p>Hecho con ❤️ por <a href="#">Raphael Barone</a> · Viajando por México · 2025</p>
+  <p style="margin-top:8px;font-size:.75rem">© Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>
